@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 // adicionado atraves do npm install: npm install @react-native-async-storage/async-storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,8 @@ export default function App() {
 
   const [nome, setNome] = useState('');
   const [input, setInput] = useState('');
+  //useRef - referenciar um elemento nessa opção seu nome TextInput
+  const nomeInput = useRef(null);
 
   //ComponentDidMount
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function App() {
     async function saveStorage() {
       await AsyncStorage.setItem('nomes', nome);
     }
-    
+
     saveStorage();
 
   }, [nome])
@@ -39,11 +41,17 @@ export default function App() {
 
   }
 
-  const letrasNome = useMemo(()=>{
-    console.log('Mudou letra');
+  // useMemo função de calcular grandes numero sem consumo de memoria
+  const letrasNome = useMemo(() => {
+    // exibir chamada da função e letras.
+    //console.log('Mudou letra');
     return nome.length;
   }, [nome]);
-  
+
+  //função incluir nome novo no "sue nome..."
+  function novoNome() {
+    nomeInput.current.focus();
+  }
 
   return (
     <View style={styles.container}>
@@ -52,7 +60,9 @@ export default function App() {
         style={styles.Input}
         placeholder="Seu nome..."
         value={input}
-        onChangeText={(texto) => setInput(texto)} />
+        onChangeText={(texto) => setInput(texto)}
+        ref={nomeInput}
+      />
 
       <TouchableOpacity style={styles.btn} onPress={alterarNome}>
         <Text style={styles.btnTexto}>
@@ -61,7 +71,10 @@ export default function App() {
       </TouchableOpacity>
       <Text style={styles.texto}>{nome}</Text>
       <Text style={styles.texto}>Tem {letrasNome} Letras</Text>
-
+      
+      <TouchableOpacity onPress={novoNome}>
+        <Text>Novo nome</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -234,5 +247,100 @@ const styles = StyleSheet.create({
 
   }
 });
+*/
+/**
+ *       
+import React, { useState, useEffect, useMemo } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+// adicionado atraves do npm install: npm install @react-native-async-storage/async-storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export default function App() {
+
+  const [nome, setNome] = useState('');
+  const [input, setInput] = useState('');
+
+  //ComponentDidMount
+  useEffect(() => {
+
+    async function getStorage() {
+      const nomeStorage = await AsyncStorage.getItem('nomes');
+      if (nomeStorage !== null) {
+        setNome(nomeStorage);
+      }
+    }
+
+    getStorage();
+
+  }, []);
+
+  //ComponentDidUpdate
+  useEffect(() => {
+
+    async function saveStorage() {
+      await AsyncStorage.setItem('nomes', nome);
+    }
+
+    saveStorage();
+
+  }, [nome])
+
+  function alterarNome() {
+    setNome(input);
+    setInput('');
+
+  }
+  // useMemo função de calcular grandes numero sem consumo de memoria
+  const letrasNome = useMemo(() => {
+    // exibir chamada da função e letras.
+    console.log('Mudou letra');
+    return nome.length;
+  }, [nome]);
+
+
+  return (
+    <View style={styles.container}>
+
+      <TextInput
+        style={styles.Input}
+        placeholder="Seu nome..."
+        value={input}
+        onChangeText={(texto) => setInput(texto)} />
+
+      <TouchableOpacity style={styles.btn} onPress={alterarNome}>
+        <Text style={styles.btnTexto}>
+          Altera Nome
+        </Text>
+      </TouchableOpacity>
+      <Text style={styles.texto}>{nome}</Text>
+      <Text style={styles.texto}>Tem {letrasNome} Letras</Text>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    margin: 20
+  },
+  texto: {
+    color: '#322e31',
+    fontSize: 40
+  },
+  btn: {
+    backgroundColor: '#0f26e3',
+    alignItems: 'center'
+  },
+  btnTexto: {
+    color: '#ffffff'
+  },
+  Input: {
+    fontSize: 21,
+    justifyContent: 'center'
+
+  }
+});
+
+ * 
  */
