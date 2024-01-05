@@ -1,11 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function App() {
+
+  const [nome, setNome] = useState("Gabriel");
+  const [input, setInput] = useState('');
+
+  function alterarNome() {
+    setNome("input");
+
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+
+      <TextInput
+        style={styles.Input}
+        placeholder="Seu nome..."
+        value={input}
+        onChangeText={(texto) => setInput(texto)} />
+
+      <TouchableOpacity style={styles.btn} onPress={alterarNome}>
+        <Text style={styles.btnTexto}>
+          Altera Nome
+        </Text>
+      </TouchableOpacity>
+      <Text style={styles.texto}>{nome}</Text>
+
     </View>
   );
 }
@@ -13,8 +34,23 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    margin: 20
   },
+  texto: {
+    color: '#322e31',
+    fontSize: 40
+  },
+  btn: {
+    backgroundColor: '#0f26e3',
+    alignItems: 'center'
+  },
+  btnTexto: {
+    color: '#ffffff'
+  },
+  Input: {
+    fontSize: 21,
+    marginTop: 85,
+    justifyContent:'center'
+  
+  }
 });
